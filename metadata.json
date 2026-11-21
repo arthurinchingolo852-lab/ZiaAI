@@ -1,0 +1,12 @@
+{
+  "name": "Zia AI",
+  "description": "Zia AI — A assistente pessoal futurista, melhor amiga e parceira de jogos do Arthur com voz natural em português, análise de tela em tempo real, criação de imagens/vídeos e Central Gamer.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera",
+    "display-capture"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

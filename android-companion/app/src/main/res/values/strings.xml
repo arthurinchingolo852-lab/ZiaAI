@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zia AI Live</string>
+    <string name="accessibility_service_description">Permite que a Zia AI execute toques e deslizes reais na tela durante jogos quando o Modo Copiloto de Jogos estiver ativado pelo usuário.</string>
+</resources>

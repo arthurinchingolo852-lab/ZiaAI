@@ -23,8 +23,31 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Configurar Android SDK pré-instalado e aceitar licenças
+        shell: bash
+        run: |
+          SDK_DIR="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          if [ ! -d "$SDK_DIR" ]; then
+            echo "Erro: Android SDK não encontrado em $SDK_DIR"
+            exit 1
+          fi
+
+          echo "ANDROID_HOME=$SDK_DIR" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$SDK_DIR" >> "$GITHUB_ENV"
+          echo "$SDK_DIR/platform-tools" >> "$GITHUB_PATH"
+
+          SDKMANAGER="$(command -v sdkmanager || find "$SDK_DIR/cmdline-tools" -name sdkmanager -type f 2>/dev/null | head -n 1 || true)"
+          if [ -n "$SDKMANAGER" ]; then
+            echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+            yes | "$SDKMANAGER" --sdk_root="$SDK_DIR" --licenses >/dev/null 2>&1 || true
+            "$SDKMANAGER" --sdk_root="$SDK_DIR" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          else
+            echo "Aviso: sdkmanager não encontrado em $SDK_DIR; verificando plataformas instaladas:"
+            ls -la "$SDK_DIR/platforms" || true
+          fi
+
+          printf 'sdk.dir=%s\n' "$SDK_DIR" > android-companion/local.properties
+          echo "Android SDK configurado com sucesso em: $SDK_DIR"
 
       - name: Configurar Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
